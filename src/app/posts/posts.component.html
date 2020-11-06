@@ -1,1 +1,32 @@
-<p>posts works!</p>
+<div class="container" *ngIf="posts">
+  <h4>Total Posts Found:  {{ posts.length }} </h4>
+  <div class="card mt-3 card-shadow" *ngFor="let post of posts">
+    <div class="card-horizontal">
+      <div class="card-body">
+        <div class="">
+          <span class="float-left">
+            <h5>
+              <span class="badge badge-secondary text-uppercase">
+                {{post.category }}</span>
+            </h5>
+          </span>
+          <span class="float-right">
+            <button type="button" class="btn btn-outline-primary btn-sm">
+              <i class="fa fa-eye fa-fw"></i>
+              {{post.id}}
+            </button>
+          </span>
+          <div class="clearfix"></div>
+        </div>
+        <strong class="card-title">  {{post.title | uppercase | lowercase }}</strong>
+        <p class="card-text">
+            {{post.description}}
+        </p>
+        <div class="p-2">
+          <small class="text-muted float-left"> {{post.createdOn | date: 'ddMM/yyyy' }} </small>
+          <small class="text-muted float-right"> {{post.amount | currency: 'EUR'}} </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

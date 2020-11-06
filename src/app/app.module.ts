@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TestComponent } from './test/test.component';
 import { HeaderComponent } from './header/header.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { PostsComponent } from './posts/posts.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -16,7 +15,6 @@ import { CommonModule } from '@angular/common';
     AppComponent,
     TestComponent,
     HeaderComponent,
-    SidebarComponent,
     FooterComponent,
     PostsComponent,
     DashboardComponent
