@@ -1,5 +1,6 @@
 <div class="container" *ngIf="posts">
-  <h4>Total Posts Found:  {{ posts.length }} </h4>
+  <h4>Total Posts Found:  {{ posts.length }}  <button (click)="addNote()" class="btn btn-primary">Add New Note</button></h4>
+
   <div class="card mt-3 card-shadow" *ngFor="let post of posts">
     <div class="card-horizontal">
       <div class="card-body">
