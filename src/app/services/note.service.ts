@@ -35,4 +35,19 @@ export class NoteService {
         });
     });
   }
+
+  deleteNote(noteId): Observable<any> {
+    return new Observable((observer) => {
+        db.collection('notes')
+          .doc(noteId)
+          .delete()
+          .then(() => {
+            observer.next(true);
+          })
+          .catch((error) => {
+            console.error('Error deleteUser: ', error);
+            throwError(error);
+          });
+      });
+  }
 }

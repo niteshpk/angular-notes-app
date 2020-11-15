@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NoteService } from '../services/note.service';
+declare var jQuery: any;
 
 @Component({
   selector: 'app-posts',
@@ -7,6 +8,22 @@ import { NoteService } from '../services/note.service';
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent implements OnInit {
+  @ViewChild('addNoteModal') addNoteModal: ElementRef;
+  categories = [
+    {
+      name: 'Category 1',
+      id: '1'
+    },
+    {
+      name: 'Category 2',
+      id: '2'
+    },
+    {
+      name: 'Category 3',
+      id: '3'
+    }
+  ];
+  newNote: any;
   // posts = [
   //   {
   //     id: 1,
@@ -33,19 +50,46 @@ export class PostsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // this.newNote = this.getBlankCategoryObject();
     this.noteService.getNotes().subscribe((notesArr) => {
      this.posts = notesArr;
     });
+    this.newNote = this.getBlankCategoryObject();
   }
 
-  addNote() {
+  getBlankCategoryObject(): any {
+    return {
+      id: '',
+      title: '',
+      description: '',
+      category: '',
+      createdOn: '',
+      amount: '',
+    };
+  }
+
+  addNote(): any {
+    this.newNote = this.getBlankCategoryObject();
+    jQuery(this.addNoteModal.nativeElement).modal('show');
+  }
+
+  createNote(): any {
     this.noteService.createNote({
-      title: 'Title first',
-      description: 'Description first',
-      category: 'Category first',
+      title: this.newNote.title,
+      description: this.newNote.description,
+      category: this.newNote.category,
       createdOn: '11 Jan 2020',
-      amount: 123456,
+      amount: this.newNote.amount,
     }).subscribe((note) => {
+      jQuery(this.addNoteModal.nativeElement).modal('hide');
+     });
+
+  }
+
+  deleteNote(noteId): any {
+    this.noteService.deleteNote(noteId).subscribe(
+      (result) => {
+      console.log('deleted : ', noteId);
      });
   }
 
