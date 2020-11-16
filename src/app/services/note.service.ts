@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import db from './firebase';
 
 @Injectable({
@@ -30,8 +30,8 @@ export class NoteService {
           observer.next(note);
         })
         .catch((error) => {
-          console.log('Error createNote: ', error);
-          throwError(error);
+          console.log('NoteService createNote: ', error);
+          observer.error(new Error(error));
         });
     });
   }
@@ -46,8 +46,26 @@ export class NoteService {
           })
           .catch((error) => {
             console.error('Error deleteUser: ', error);
-            throwError(error);
+            observer.error(new Error(error));
           });
       });
+  }
+
+  updateNote(note): Observable<any> {
+    const id = note.id;
+    delete note.id;
+    return new Observable((observer) => {
+      db.collection('notes')
+        .doc(id)
+        .update(note)
+        .then(() => {
+          note.id = id;
+          observer.next(note);
+        })
+        .catch((error) => {
+          console.error('Error updateNote: ', error);
+          observer.error(new Error(error));
+        });
+    });
   }
 }

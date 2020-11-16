@@ -1,5 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NoteService } from '../services/note.service';
+interface ICategory {
+  name: string;
+  id: string;
+}
+
 declare var jQuery: any;
 
 @Component({
@@ -9,7 +14,10 @@ declare var jQuery: any;
 })
 export class PostsComponent implements OnInit {
   @ViewChild('addNoteModal') addNoteModal: ElementRef;
-  categories = [
+  @ViewChild('showNoteModal') showNoteModal: ElementRef;
+  @ViewChild('updateNoteModal') updateNoteModal: ElementRef;
+
+  categories: ICategory[] = [
     {
       name: 'Category 1',
       id: '1'
@@ -24,6 +32,7 @@ export class PostsComponent implements OnInit {
     }
   ];
   newNote: any;
+  selectedNote: any;
   // posts = [
   //   {
   //     id: 1,
@@ -54,23 +63,43 @@ export class PostsComponent implements OnInit {
     this.noteService.getNotes().subscribe((notesArr) => {
      this.posts = notesArr;
     });
-    this.newNote = this.getBlankCategoryObject();
+    this.selectedNote = this.newNote = this.getBlankCategoryObject();
   }
 
   getBlankCategoryObject(): any {
+    const random = Math.round(Math.floor(Math.random() * 100) * Math.random() + Math.random());
     return {
       id: '',
-      title: '',
-      description: '',
-      category: '',
-      createdOn: '',
-      amount: '',
+      title: 'test ' + random,
+      description: 'test ' + random,
+      category: '1',
+      createdOn: '16 Nov 2020',
+      amount: random,
     };
   }
 
-  addNote(): any {
+  openCreateModal(): any {
     this.newNote = this.getBlankCategoryObject();
     jQuery(this.addNoteModal.nativeElement).modal('show');
+  }
+
+  openShowModal(note): any {
+    this.selectedNote = note;
+    jQuery(this.showNoteModal.nativeElement).modal('show');
+  }
+
+  openUpdateModal(note): any {
+    this.selectedNote = {...note};
+
+    jQuery(this.updateNoteModal.nativeElement).modal('show');
+  }
+
+  getCategoryName(categoryId): string {
+    const selectedCategory =  this.categories.filter((category) => {
+      return category.id === categoryId;
+    });
+
+    return  selectedCategory && selectedCategory.length ? selectedCategory[0].name : '';
   }
 
   createNote(): any {
@@ -82,6 +111,18 @@ export class PostsComponent implements OnInit {
       amount: this.newNote.amount,
     }).subscribe((note) => {
       jQuery(this.addNoteModal.nativeElement).modal('hide');
+     },
+     (error) => {
+      console.log('PostComponent createNote: ', error);
+     });
+  }
+
+  updateNote(): any {
+    this.noteService.updateNote(this.selectedNote).subscribe((note) => {
+      jQuery(this.updateNoteModal.nativeElement).modal('hide');
+     },
+     (error) => {
+      console.log('PostComponent updateNote: ', error);
      });
 
   }
